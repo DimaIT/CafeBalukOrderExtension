@@ -32,7 +32,6 @@
 		}
 
 		item._updated = true
-
 	}
 
 	setInterval(updateDom, 100) // to handle dom changes

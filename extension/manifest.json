@@ -1,6 +1,6 @@
 {
 	"name": "Baluk order helper",
-	"version": "0.1",
+	"version": "0.2",
 	"description": "Baluk order helper",
 	"background": {
 		"scripts": ["background.js"],
@@ -12,5 +12,10 @@
 		"http://*.cafebaluk.by/",
 		"http://cafebaluk.by/"
 	],
+	"icons": {
+		"16": "icon/32.png",
+		"48": "icon/48.png",
+		"128": "icon/256.png"
+	},
 	"manifest_version": 2
 }
