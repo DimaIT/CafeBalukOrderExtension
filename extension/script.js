@@ -1,11 +1,13 @@
 (function() {
 	if (window._initialized)
 		return
+	if (!window.location.pathname.includes('zakaz'))
+		return
 
 	let order = new Map()
     let updateTotal = () => {}
 
-	updateDom()
+	setTimeout(updateDom, 300) // wait for page loading
 
 	function updateDom() {
         const btnTemplate = `
@@ -28,7 +30,8 @@
 		<br>
 		`
 
-        setTimeout(replaceBasket, 300) // page for loading
+        replaceBasket()
+        cleanUp()
         setInterval(replaceItems, 100) // to handle new dom changes
 
         function replaceBasket() {
@@ -39,7 +42,7 @@
             let priceHolder = container.querySelector('#_total_price')
 
             updateTotal = f => priceHolder.innerText = formatFloat(f) + 'p.'
-            btn.onclick = getResult()
+            btn.onclick = getResult
         }
 
         function replaceItems() {
@@ -55,24 +58,34 @@
             counter.parentNode.removeChild(counter)
 
             let btnAdd = container.querySelector('._btn-add')
+            let btnRemove = container.querySelector('._btn-remove')
+
             btnAdd.onclick = () => {
                 let description = item.querySelector('.shop-item__text').innerText
                 let price = item.querySelector('.shop-item__weight-price > dl > dd:nth-child(4)').innerText
                 price = parseFloat(price.trim().replace(',', '.').replace('р.', ''))
                 order.set(description, price)
 
+                btnRemove.classList.add('_enabled')
+
                 getResult()
             }
 
-            let btnRemove = container.querySelector('._btn-remove')
             btnRemove.onclick = () => {
                 let description = item.querySelector('.shop-item__text').innerText
                 order.delete(description)
+                btnRemove.classList.remove('_enabled')
 
                 getResult()
             }
 
             item._updated = true
+        }
+
+        function cleanUp() {
+            document.querySelector('footer').innerHTML = ''
+            document.querySelector('.page-slogan').innerHTML = ''
+            document.querySelector('.top-content').innerHTML = ''
         }
 	}
 
