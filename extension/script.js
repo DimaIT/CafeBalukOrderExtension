@@ -39,6 +39,7 @@
             let priceHolder = container.querySelector('#_total_price')
 
             updateTotal = f => priceHolder.innerText = formatFloat(f) + 'p.'
+            btn.onclick = getResult()
         }
 
         function replaceItems() {
@@ -84,11 +85,31 @@
         })
         console.log(msg, formatFloat(result))
         updateTotal(result)
+        copyText(msg)
 		return [msg, result]
 	}
 
 	function formatFloat(f) {
 	    return f.toFixed(2).toString().replace('.', ',')
+    }
+
+    function copyText(text) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = 'fixed'
+        textArea.style.top = '0'
+        textArea.style.left = '0'
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            console.error('Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
     }
 
 	window._initialized = true
