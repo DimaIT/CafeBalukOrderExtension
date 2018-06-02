@@ -3,6 +3,7 @@
 		return
 
 	let order = new Map()
+    let updateTotal = () => {}
 
 	updateDom()
 
@@ -18,29 +19,35 @@
         const basketTemplate = `
 		<h3>Моя корзина</h3>
 		<div class="shop-cart__text">
-			<span><i class="fa fa-cart-arrow-down"></i> 0,00р.</span>
+			<i class="fa fa-cart-arrow-down"></i> 
+			<span id="_total_price"> 0,00р.</span>
 		</div>
 		<div class="shop-cart__order">
-			<span><i class="fa fa-copy"></i> Скопировать заказ</span>
+			<span id="_copy-btn"><i class="fa fa-copy"></i> Скопировать заказ</span>
 		</div>
 		<br>
 		`
 
-        setTimeout(updateBasket, 200) // page for loading
-        setInterval(updateItems, 100) // to handle new dom changes
+        setTimeout(replaceBasket, 300) // page for loading
+        setInterval(replaceItems, 100) // to handle new dom changes
 
-        function updateBasket() {
+        function replaceBasket() {
             let container = document.querySelector('.shop-view-sidebar > div > cart-summary > .shop-cart')
             container.innerHTML = basketTemplate
+
+            let btn = container.querySelector('#_copy-btn')
+            let priceHolder = container.querySelector('#_total_price')
+
+            updateTotal = f => priceHolder.innerText = formatFloat(f) + 'p.'
         }
 
-        function updateItems() {
+        function replaceItems() {
             Array.from(document.querySelectorAll('.shop-item'))
                 .filter(item => !item._updated)
-                .forEach(updateItem)
+                .forEach(replaceItem)
         }
 
-        function updateItem(item) {
+        function replaceItem(item) {
             let container = item.querySelector('.shop-item__order-btn')
             container.innerHTML = btnTemplate;
             let counter = item.querySelector('.shop-item__order')
@@ -73,11 +80,16 @@
         let msg = ''
         order.forEach((v, k) => {
             result += v
-            msg += `${k} - ${v}p\n`
+            msg += `${k} - ${formatFloat(v)}p\n`
         })
-        console.log(msg, result)
+        console.log(msg, formatFloat(result))
+        updateTotal(result)
 		return [msg, result]
 	}
+
+	function formatFloat(f) {
+	    return f.toFixed(2).toString().replace('.', ',')
+    }
 
 	window._initialized = true
 })()
