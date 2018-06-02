@@ -1,16 +1,18 @@
 {
 	"name": "Baluk order helper",
-	"version": "0.2",
+	"version": "0.3",
 	"description": "Baluk order helper",
-	"background": {
-		"scripts": ["background.js"],
-		"persistent": false
-	},
 	"permissions": [
-		"webNavigation",
 		"activeTab",
-		"http://*.cafebaluk.by/",
-		"http://cafebaluk.by/"
+		"*://*.cafebaluk.by/",
+		"*://cafebaluk.by/"
+	],
+	"content_scripts": [
+		{
+			"matches": ["*://*.cafebaluk.by/*", "*://cafebaluk.by/*"],
+			"css": ["style.css"],
+			"js": ["script.js"]
+		}
 	],
 	"icons": {
 		"16": "icon/32.png",
