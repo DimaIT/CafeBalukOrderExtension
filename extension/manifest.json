@@ -1,6 +1,6 @@
 {
 	"name": "Baluk order helper",
-	"version": "0.3",
+	"version": "0.4",
 	"description": "Baluk order helper",
 	"permissions": [
 		"activeTab",
