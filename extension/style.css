@@ -8,5 +8,9 @@
     margin-top: 0 !important;
     float: left !important;
     width: 25% !important;
-    background: #f00 !important;
+    background: #e11 !important;
+}
+
+._btn-remove:hover {
+    background: #c00 !important;
 }
