@@ -1,0 +1,12 @@
+._btn-add {
+    float: left !important;
+    width: 75% !important;
+}
+
+._btn-remove {
+    font-size: 1.5em !important;
+    margin-top: 0 !important;
+    float: left !important;
+    width: 25% !important;
+    background: #f00 !important;
+}
