@@ -57,11 +57,15 @@
             let counter = item.querySelector('.shop-item__order')
             counter.parentNode.removeChild(counter)
 
+	        let description = item.querySelector('.shop-item__text').innerText
             let btnAdd = container.querySelector('._btn-add')
             let btnRemove = container.querySelector('._btn-remove')
 
+	        if (order.has(description)) {
+		        btnRemove.classList.add('_enabled')
+	        }
+
             btnAdd.onclick = () => {
-                let description = item.querySelector('.shop-item__text').innerText
                 let price = item.querySelector('.shop-item__weight-price > dl > dd:nth-child(4)').innerText
                 price = parseFloat(price.trim().replace(',', '.').replace('р.', ''))
                 order.set(description, price)
@@ -72,7 +76,6 @@
             }
 
             btnRemove.onclick = () => {
-                let description = item.querySelector('.shop-item__text').innerText
                 order.delete(description)
                 btnRemove.classList.remove('_enabled')
 
