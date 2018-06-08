@@ -17,6 +17,10 @@
             } else {
                 this.content.set(description, {price, count: 1})
             }
+            return this.content.get(description)
+        },
+        get(description) {
+            return this.content.get(description)
         },
         delete(description) {
             this.content.delete(description)
@@ -44,8 +48,9 @@
 	function updateDom() {
         const btnTemplate = `
 		<div class="shop-item__order-btn">
-        	<span class="btn btn-block _btn-add" > В корзину</span>
-        	<span class="btn btn-block _btn-remove" >
+        	<span class="btn btn-block _counter">&nbsp;</span>
+        	<span class="btn btn-block _btn-add"> В корзину</span>
+        	<span class="btn btn-block _btn-remove">
         		<i class="fa fa-trash"></i>
 			</span>
         </div>`
@@ -92,15 +97,18 @@
 	        let description = item.querySelector('.shop-item__text').innerText
             let btnAdd = container.querySelector('._btn-add')
             let btnRemove = container.querySelector('._btn-remove')
+            let counter = container.querySelector('._counter')
 
 	        if (basket.has(description)) {
 		        btnRemove.classList.add('_enabled')
+                updateCounter(basket.get(description))
 	        }
 
             btnAdd.onclick = () => {
                 let price = item.querySelector('.shop-item__weight-price > dl > dd:nth-child(4)').innerText
                 price = parseFloat(price.trim().replace(',', '.').replace('р.', ''))
                 basket.put(description, price)
+                updateCounter(basket.get(description))
 
                 btnRemove.classList.add('_enabled')
 
@@ -110,8 +118,17 @@
             btnRemove.onclick = () => {
                 basket.delete(description)
                 btnRemove.classList.remove('_enabled')
+                updateCounter()
 
                 basket.getResult()
+            }
+
+            function updateCounter(i) {
+                if (i && i.count > 1) {
+                    counter.innerText = i.count + 'X'
+                } else {
+                    counter.innerHTML = '&nbsp;'
+                }
             }
 
             item._updated = true

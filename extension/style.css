@@ -1,6 +1,18 @@
+._counter {
+    background: #eeeeee !important;
+    float: left !important;
+    width: 10% !important;
+    margin-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    color: #333 !important;
+    font-weight: bold !important;
+}
+
 ._btn-add {
     float: left !important;
-    width: 75% !important;
+    width: 65% !important;
+    margin-top: 0 !important;
 }
 
 ._btn-remove {
