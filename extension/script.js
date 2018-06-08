@@ -4,8 +4,40 @@
 	if (!window.location.pathname.includes('zakaz'))
 		return
 
-	let order = new Map()
     let updateTotal = () => {}
+
+    let basket = {
+        content: new Map(),
+        has(s) {
+            return basket.content.has(s)
+        },
+        put(description, price) {
+            if (this.content.has(description)) {
+                this.content.get(description).count++
+            } else {
+                this.content.set(description, {price, count: 1})
+            }
+        },
+        delete(description) {
+            this.content.delete(description)
+        },
+        getResult() {
+            let result = 0
+            let msg = Array.from(this.content.entries())
+                .map(([description, {price, count}]) => {
+                    result += price * count
+                    let counter = count > 1
+                        ? `${count}x `
+                        : ''
+                    return counter + description + ` - ${formatFloat(price * count)}p`
+                })
+                .join('\n')
+            console.log(msg, formatFloat(result))
+            updateTotal(result)
+            copyText(msg)
+            return [msg, result]
+        },
+    }
 
 	setTimeout(updateDom, 300) // wait for page loading
 
@@ -42,7 +74,7 @@
             let priceHolder = container.querySelector('#_total_price')
 
             updateTotal = f => priceHolder.innerText = formatFloat(f) + 'p.'
-            btn.onclick = getResult
+            btn.onclick = basket.getResult()
         }
 
         function replaceItems() {
@@ -53,33 +85,33 @@
 
         function replaceItem(item) {
             let container = item.querySelector('.shop-item__order-btn')
-            container.innerHTML = btnTemplate;
-            let counter = item.querySelector('.shop-item__order')
-            counter.parentNode.removeChild(counter)
+            container.innerHTML = btnTemplate
+            let oldCounter = item.querySelector('.shop-item__order')
+            oldCounter.parentNode.removeChild(oldCounter)
 
 	        let description = item.querySelector('.shop-item__text').innerText
             let btnAdd = container.querySelector('._btn-add')
             let btnRemove = container.querySelector('._btn-remove')
 
-	        if (order.has(description)) {
+	        if (basket.has(description)) {
 		        btnRemove.classList.add('_enabled')
 	        }
 
             btnAdd.onclick = () => {
                 let price = item.querySelector('.shop-item__weight-price > dl > dd:nth-child(4)').innerText
                 price = parseFloat(price.trim().replace(',', '.').replace('р.', ''))
-                order.set(description, price)
+                basket.put(description, price)
 
                 btnRemove.classList.add('_enabled')
 
-                getResult()
+                basket.getResult()
             }
 
             btnRemove.onclick = () => {
-                order.delete(description)
+                basket.delete(description)
                 btnRemove.classList.remove('_enabled')
 
-                getResult()
+                basket.getResult()
             }
 
             item._updated = true
@@ -92,40 +124,27 @@
         }
 	}
 
-	function getResult() {
-        let result = 0
-        let msg = ''
-        order.forEach((v, k) => {
-            result += v
-            msg += `${k} - ${formatFloat(v)}p\n`
-        })
-        console.log(msg, formatFloat(result))
-        updateTotal(result)
-        copyText(msg)
-		return [msg, result]
-	}
-
 	function formatFloat(f) {
 	    return f.toFixed(2).toString().replace('.', ',')
     }
 
     function copyText(text) {
-        let textArea = document.createElement("textarea");
-        textArea.value = text;
+        let textArea = document.createElement("textarea")
+        textArea.value = text
         textArea.style.position = 'fixed'
         textArea.style.top = '0'
         textArea.style.left = '0'
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
+        document.body.appendChild(textArea)
+        textArea.focus()
+        textArea.select()
 
         try {
-            document.execCommand('copy');
+            document.execCommand('copy')
         } catch (err) {
-            console.error('Oops, unable to copy', err);
+            console.error('Oops, unable to copy', err)
         }
 
-        document.body.removeChild(textArea);
+        document.body.removeChild(textArea)
     }
 
 	window._initialized = true
