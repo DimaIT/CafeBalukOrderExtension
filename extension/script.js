@@ -33,10 +33,11 @@
                     let counter = count > 1
                         ? `${count}x `
                         : ''
-                    return counter + description + ` - ${formatFloat(price * count)}p`
+                    return counter + description + ` - ${formatFloat(price * count)}p.`
                 })
                 .join('\n')
-            console.log(msg, formatFloat(result))
+            console.log(msg)
+            console.log(formatFloat(result))
             updateTotal(result)
             copyText(msg)
             return [msg, result]
@@ -124,7 +125,7 @@
             }
 
             function updateCounter(i) {
-                if (i && i.count > 1) {
+                if (i && i.count > 0) {
                     counter.innerText = i.count + 'X'
                 } else {
                     counter.innerHTML = '&nbsp;'
