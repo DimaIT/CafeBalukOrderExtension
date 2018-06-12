@@ -39,6 +39,8 @@
             console.log(msg)
             console.log(formatFloat(result))
             updateTotal(result)
+            let msgForCopy = msg.replace(/"/mg, "'")
+            copyText(`"${msgForCopy}"\t${formatFloat(result)}`)
             copyText(msg)
             return [msg, result]
         },
